@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Life OS – Hướng dẫn xây dựng từng bước</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#F2F4F1;--sf:#fff;--ink:#16221E;--mu:#566660;--ln:#D5DDD8;--ac:#1E6B58;--as:#DCEEE8;--wn:#8F530A;--ws:#F6E7CC;--cb:#12201C;--ct:#DCEFE8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1715;--sf:#16211E;--ink:#E4EEEA;--mu:#94A79F;--ln:#2A3834;--ac:#5CC4A6;--as:#1B3A31;--wn:#E3A653;--ws:#3A2C14;--cb:#0A100E;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1715;--sf:#16211E;--ink:#E4EEEA;--mu:#94A79F;--ln:#2A3834;--ac:#5CC4A6;--as:#1B3A31;--wn:#E3A653;--ws:#3A2C14;--cb:#0A100E;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.65 "Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{display:grid;grid-template-columns:270px minmax(0,1fr);gap:40px;max-width:1120px;margin:0 auto;padding:32px 20px 80px}
+nav{position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto}
+nav h2{font-size:15px;margin:0 0 4px}
+.bar{height:6px;background:var(--ln);border-radius:3px;overflow:hidden;margin:8px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .3s}
+.pct{font-size:13px;color:var(--mu);margin:0 0 14px}
+nav a{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-left:3px solid var(--ln);color:var(--ink);text-decoration:none;font-size:14px;line-height:1.4}
+nav a:hover{background:var(--as)}nav a.done{border-left-color:var(--ac)}nav a small{color:var(--mu);white-space:nowrap}
+a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.15;margin:0 0 14px;letter-spacing:-.02em}
+.lead{font-size:18px;color:var(--mu);max-width:62ch;margin:0 0 22px}
+.loop{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 28px;padding:0;list-style:none;font-weight:600;font-size:14px}
+.loop li{background:var(--as);color:var(--ac);padding:4px 12px;border-radius:99px}
+h2.s{font-size:22px;margin:40px 0 12px}
+.box{background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:18px 20px;margin:0 0 16px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.box h3{margin:0 0 8px;font-size:16px}.box ul,.box ol{margin:0;padding-left:20px}.box li{margin:3px 0}
+section.ph{background:var(--sf);border:1px solid var(--ln);border-radius:12px;margin:0 0 24px;overflow:hidden}
+.ph>header{padding:20px 22px 6px}
+.wk{display:inline-block;font-size:13px;font-weight:600;color:var(--ac);background:var(--as);padding:2px 10px;border-radius:99px}
+.ph h3{font-size:22px;margin:8px 0 6px;line-height:1.3}.ph .g{margin:0;color:var(--mu)}
+.in{padding:4px 22px 20px}.in h4{font-size:15px;margin:18px 0 6px}
+.ck{list-style:none;margin:0;padding:0}
+.ck li{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+.ck input{margin-top:6px;width:18px;height:18px;accent-color:var(--ac);flex:none}
+.ck label{cursor:pointer}.ck input:checked+label{color:var(--mu);text-decoration:line-through}
+code{font:13px ui-monospace,Menlo,Consolas,monospace;background:var(--as);padding:1px 6px;border-radius:4px}
+details{border:1px solid var(--ln);border-radius:8px;margin:14px 0}
+summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:15px}
+.pw{position:relative;border-top:1px solid var(--ln)}
+pre{margin:0;padding:16px 14px;background:var(--cb);color:var(--ct);font:13px/1.6 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;overflow-x:auto;border-radius:0 0 8px 8px}
+.cp{position:absolute;top:8px;right:8px;background:var(--ac);color:#fff;border:0;border-radius:6px;padding:6px 12px;font:600 13px inherit;font-family:inherit;cursor:pointer}
+.wn{background:var(--ws);color:var(--wn);border-radius:8px;padding:10px 14px;margin:16px 0 0;font-size:15px}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--ln);vertical-align:top}
+.sc{overflow-x:auto}
+@media (max-width:860px){.wrap{grid-template-columns:1fr;gap:16px}nav{position:static;max-height:none}.two{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav aria-label="Các giai đoạn">
+<h2>Tiến độ xây dựng</h2>
+<div class="bar"><i id="pb"></i></div>
+<p class="pct" id="pt">0 / 0 mục</p>
+<div id="nv"></div>
+</nav>
+<main>
+<h1>Xây dựng Life OS từng bước</h1>
+<p class="lead">Hướng dẫn biến tài liệu mô tả Life OS thành ứng dụng chạy được: React + TypeScript, Firebase và Gemini, theo lộ trình 30 ngày, mỗi tuần 5–10 giờ.</p>
+<ul class="loop" aria-label="Vòng phản hồi"><li>Observe</li><li>Understand</li><li>Decide</li><li>Act</li><li>Reflect</li><li>Learn</li><li>Renew</li></ul>
+
+<div class="two">
+<div class="box"><h3>Phạm vi MVP v1.0: chỉ 4 module</h3><ol><li>Life Command Center</li><li>Strategy &amp; Identity</li><li>Execution &amp; KPI Engine</li><li>Reflection &amp; Decision Lab</li></ol><p style="margin:8px 0 0;color:var(--mu);font-size:14px">Knowledge, Finance, Career, Writing, Learning chỉ hiện ở roadmap, không giả lập là đã có chức năng.</p></div>
+<div class="box"><h3>Quy trình lặp lại cho mọi tính năng</h3><ol><li>Define: vấn đề, người dùng, hành vi mong muốn</li><li>Specify: tiêu chí chấp nhận, business rules</li><li>Architect: module, luồng dữ liệu, schema</li><li>Scaffold: cấu trúc code, giao diện nền</li><li>Implement: từng chức năng nhỏ</li><li>Test: logic, dữ liệu, quyền truy cập, tình huống biên</li><li>Deploy: build và triển khai</li><li>Iterate: phản hồi, sửa lỗi</li></ol></div>
+</div>
+<div class="box"><h3>Quy tắc làm việc với AI coding</h3><ul><li>Mỗi prompt chỉ một mục tiêu chính; yêu cầu AI đọc code hiện tại trước khi sửa.</li><li>Yêu cầu nêu file thay đổi, lý do và tác động; review diff trước khi nhận.</li><li>Không chấp nhận sửa lỗi bằng cách xóa test hoặc hardcode kết quả mong muốn.</li><li>Git commit trước mỗi thay đổi lớn; lỗi phức tạp thì yêu cầu giải thích nguyên nhân trước khi sửa.</li><li>Business rules chưa định nghĩa thì bạn quyết định, không để AI tự chọn.</li></ul></div>
+
+<h2 class="s">Các giai đoạn</h2>
+<div id="ph"></div>
+
+<h2 class="s">Definition of Done v1.0</h2>
+<section class="ph"><div class="in" style="padding-top:18px"><ul class="ck" id="dod"></ul></div></section>
+
+<h2 class="s">Rủi ro cần canh</h2>
+<div class="box sc"><table><thead><tr><th>Rủi ro</th><th>Biện pháp</th></tr></thead><tbody>
+<tr><td>Phạm vi quá rộng</td><td>Giữ MVP ở 4 module, xong một luồng mới mở rộng</td></tr>
+<tr><td>AI tạo code khó bảo trì</td><td>Chia module, review diff, checkpoint Git</td></tr>
+<tr><td>Sai dữ liệu hoặc KPI</td><td>Định nghĩa công thức, test bằng dữ liệu mẫu</td></tr>
+<tr><td>Rò rỉ API key</td><td>Key chỉ nằm trong secret phía server</td></tr>
+<tr><td>Truy cập trái phép</td><td>Security Rules + Firebase Emulator</td></tr>
+<tr><td>Quá nhiều KPI</td><td>Chỉ đo thứ hỗ trợ quyết định</td></tr>
+<tr><td>Chi phí Firebase/Gemini tăng</td><td>Theo dõi usage, đặt giới hạn, tối ưu truy vấn</td></tr>
+<tr><td>AI kết luận quá mức</td><td>Hiển thị evidence, mức bất định, yêu cầu xác nhận</td></tr>
+</tbody></table></div>
+
+<h2 class="s">Sau v1.0</h2>
+<div class="box"><ul><li><b>v2:</b> Knowledge OS, tìm kiếm tài liệu, Copilot mở rộng, liên kết insight với quyết định và dự án.</li><li><b>v3:</b> Personal Finance, Career Capital, Writing OS, Learning &amp; Skill OS.</li><li><b>v4:</b> Phân tích xu hướng dài hạn, phân bổ nguồn lực, tự động hóa có kiểm soát.</li></ul><p style="margin:10px 0 0;color:var(--mu)">Đánh giá thành công bằng câu hỏi, không bằng số tính năng: tôi có rõ hơn điều gì quan trọng, nối được định hướng với hành động, bớt dự án dở dang, học từ quyết định, phát hiện lệch hướng sớm hơn, và không mất quá nhiều thời gian quản lý hệ thống?</p></div>
+</main>
+</div>
+<script>
+var P=[
+{t:"Chuẩn bị môi trường",w:"Trước tuần 1",g:"Có đủ tài khoản và công cụ để không bị chặn giữa chừng.",
+s:["Cài Node.js bản LTS, Git và trình soạn code (hoặc công cụ vibe coding bạn dùng).","Tạo repo GitHub riêng tư tên <code>life-os</code>.","Tạo project Firebase, bật Authentication (Google hoặc email) và Cloud Firestore.","Tạo Gemini API key và cất riêng. Chưa dán vào code; sau này chỉ đặt ở secret phía server.","Chép 5 câu hỏi đánh giá thành công (mục 18) vào <code>README.md</code> làm kim chỉ nam."],
+c:["Repo và Firebase project đã tạo xong.","Chưa có key hay secret nào nằm trong mã nguồn."]},
+{t:"Khởi tạo shell ứng dụng",w:"Tuần 1",g:"Khung giao diện, điều hướng và kiểu dữ liệu. Chưa làm tất cả module cùng lúc.",
+s:["Tạo project: <code>npm create vite@latest life-os -- --template react-ts</code>, rồi <code>npm install</code>.","Cài React Router và Firebase: <code>npm i react-router-dom firebase</code>.","Cài Tailwind CSS theo hướng dẫn hiện hành trên trang chủ Tailwind cho Vite.","Chạy Prompt 1, yêu cầu AI giải thích cấu trúc thư mục bằng tiếng Việt.","<code>npm run dev</code> kiểm tra từng trang, rồi commit checkpoint."],
+p:"Act as a senior full-stack architect and product engineer.\n\nBuild the initial shell of Life OS using React, TypeScript, Tailwind CSS,\nFirebase Authentication and Cloud Firestore.\n\nCreate:\n- Responsive navigation and application layout.\n- Command Center page.\n- Strategy & Identity page.\n- Goals & Projects page.\n- Daily Execution page.\n- Weekly Review page.\n- Typed data interfaces.\n- Clear separation between UI, business logic and Firebase services.\n\nUse realistic empty states, not fake operational data.\nDo not expose secrets in the frontend.\nExplain the project structure in Vietnamese.\n\nFirst implement the shell and data types. Do not implement every module at once.",
+c:["Điều hướng được giữa 5 trang, dùng tốt trên điện thoại.","Trang trống hiển thị empty state, không có số liệu giả.","Thư mục tách rõ UI, logic nghiệp vụ và dịch vụ Firebase."]},
+{t:"Tích hợp Firebase (một lát cắt dọc)",w:"Tuần 1",g:"Chứng minh luồng đăng nhập → tạo Goal → lưu → tải lại vẫn thấy.",
+s:["Cài công cụ: <code>npm i -g firebase-tools</code>, <code>firebase login</code>, <code>firebase init</code> (Firestore, Emulators, Hosting).","Lấy cấu hình web app trong Firebase Console, đặt vào <code>.env.local</code>, thêm file này vào <code>.gitignore</code>. Cấu hình web không phải bí mật, nhưng dữ liệu chỉ an toàn nhờ Security Rules.","Chạy Prompt 2.","Chạy thử: <code>firebase emulators:start</code>, đăng nhập, tạo Goal, tải lại trang.","Đăng nhập tài khoản thứ hai và xác nhận không đọc được dữ liệu của tài khoản đầu."],
+p:"Integrate Firebase Authentication and Cloud Firestore into the existing Life OS.\n\nImplement one vertical slice:\nsign in → create a goal → save to Firestore → reload → display the goal.\n\nRequirements:\n- Centralize Firebase initialization.\n- Use typed models and data-access functions.\n- Associate private records with the authenticated user’s UID.\n- Design restrictive Firestore Security Rules.\n- Add loading, empty, unauthorized and error states.\n- Include tests for create, read, update and unauthorized access.\n- Explain Firebase Emulator setup.\n\nDo not claim security rules are safe until tested.",
+c:["Dữ liệu nằm dưới <code>users/{uid}/goals</code> và còn nguyên sau khi tải lại.","Test create, read, update và truy cập trái phép đều chạy được trên Emulator.","Có đủ trạng thái loading, empty, unauthorized, error."],
+n:"Trước khi sang tuần 2, thống nhất cách lưu thời gian (timestamp trong database, định dạng chỉ ở UI), cách xử lý trường trống và validation lúc chạy. Type trong tài liệu chỉ là ví dụ ban đầu."},
+{t:"Strategy & Identity",w:"Tuần 2",g:"Lưu định hướng của chính bạn: Principles, Identity, North Star, Strategy, Life Dimensions.",
+s:["Tự viết trước nội dung thật: 5 nguyên tắc khởi tạo (Truth, Integrity, Growth, Contribution, Stewardship) hoặc bản bạn tùy chỉnh. Đây là gợi ý, không bắt buộc.","Chọn Life Dimensions của bạn (ví dụ Career, Wealth, Health, Relationships, Intelligence).","Chạy Prompt 3.","Nhập dữ liệu thật vào ứng dụng, sửa thử một bản ghi và tải lại.","Kiểm tra gợi ý AI (nếu có) chỉ ở dạng bản nháp chờ bạn duyệt."],
+p:"Implement the Strategy & Identity module.\n\nFeatures:\n- Principles.\n- Identity Architecture.\n- Purpose and North Star.\n- Life Strategy Map.\n- Life Dimensions.\n- Strategic Themes.\n\nPersist records to Firestore.\nValidate required fields.\nTrack createdAt and updatedAt.\nPreserve user-authored statements unless explicitly edited.\nTreat AI suggestions as drafts requiring approval.\n\nAdd tests for saving, editing, reloading and missing data.",
+c:["Tạo, sửa, lưu trữ (archived) được Principles, Strategy và Dimensions.","Có <code>createdAt</code>, <code>updatedAt</code>; câu chữ của bạn không bị ghi đè ngầm.","North Star hiện ra ở Command Center."]},
+{t:"Goals, Projects, KPIs, Habits, Daily Actions",w:"Tuần 2–3",g:"Vòng vận hành từ kế hoạch đến thực thi, với KPI có định nghĩa rõ.",
+s:["Viết ra giấy mỗi KPI: định nghĩa, công thức, đơn vị, tần suất (daily/weekly/monthly/quarterly), hướng (increase/decrease/maintain/qualitative).","Chỉ giữ KPI giúp ra quyết định; việc nghỉ ngơi, quan hệ, nghĩa vụ không cần quy đổi KPI.","Chạy Prompt 4.","Liên kết Goal ↔ Project ↔ KPI ↔ Daily Action bằng ID.","Tạo Weekly Plan với 3 ưu tiên và ghi nhận Daily Log trong vài ngày."],
+p:"Implement Goals, Projects, KPIs, Habits and Daily Actions.\n\nRequirements:\n- Typed relationships between entities.\n- CRUD operations and Firestore persistence.\n- Explicit KPI definitions, units, frequency and direction.\n- Distinguish missing measurements from zero.\n- Calculate progress only when the metric definition supports it.\n- Create a weekly view with three priorities.\n- Test date boundaries, status changes, relationships and calculations.\n\nImplement one complete workflow before expanding scope.",
+c:["Thiếu số đo hiển thị là “chưa có dữ liệu”, không phải 0.","Tiến độ chỉ tính khi định nghĩa KPI cho phép.","Test ngày biên (đầu/cuối tuần, đổi trạng thái, quan hệ) đều qua."],
+n:"Hoàn thành task không đồng nghĩa đạt outcome. Strategic Bets (Alpha, Cash Cow, R&D, Kill) là tùy chọn trong MVP; điểm số như Return × Passion chỉ để gợi thảo luận."},
+{t:"Weekly Review & Decision Log",w:"Tuần 3–4",g:"Khép vòng: so kế hoạch với thực tế và lưu lại chất lượng phán đoán.",
+s:["Chốt mẫu Weekly Review gồm 8 câu: điều quan trọng nhất; dự định; thực tế; giá trị tạo ra; chưa xong và nguyên nhân đã biết; giả định đã đổi; tiếp tục/dừng/thay đổi; 3 ưu tiên tuần sau.","Chốt mẫu Decision Log: câu hỏi, phương án, tiêu chí, giả định và bất định, lựa chọn, lý do, ngày xem lại, kết quả thực tế, bài học.","Chạy Prompt 5.","Làm một Weekly Review thật bằng dữ liệu đã nhập."],
+p:"Implement Weekly Review and Decision Log.\n\nWeekly Review:\n- Intended outcomes.\n- Actual results.\n- Wins and misses.\n- Insights and changed assumptions.\n- Continue, stop or change.\n- Next priorities.\n\nDecision Log:\n- Decision question.\n- Options and criteria.\n- Assumptions and uncertainty.\n- Chosen option and rationale.\n- Review date and actual outcome.\n\nPersist all records.\nLink reflections to goals and projects where appropriate.\nDo not invent psychological explanations.\nRequire approval before AI-generated changes are saved.",
+c:["Weekly Review tổng hợp được dữ liệu đã ghi nhận trong tuần.","Decision Log lưu đủ giả định, phương án, kết quả.","Review liên kết được tới Goal và Project."]},
+{t:"Gemini AI Copilot",w:"Tuần 4",g:"Tóm tắt và hỗ trợ quyết định, chạy qua server, có kiểm soát.",
+s:["Dựng Cloud Functions (kiểm tra gói Firebase hiện hành vì Functions có thể yêu cầu gói trả phí) và đặt key: <code>firebase functions:secrets:set GEMINI_API_KEY</code>.","Dán system prompt gợi ý (mục 12.3) vào server: chỉ dùng bản ghi được phép, tách 4 phần (quan sát đã xác minh, diễn giải khả dĩ, điều chưa biết, bước tiếp theo), không chẩn đoán sức khỏe.","Chạy Prompt 6, nhưng làm trước một năng lực: tóm tắt tuần.","Thêm dần plan-versus-actual, so sánh phương án, câu hỏi phản tư.","Đặt giới hạn sử dụng và theo dõi chi phí."],
+p:"Implement a secure Gemini-powered Personal AI Copilot.\n\nUse a trusted server-side function or backend.\nNever expose API keys in frontend code.\nAuthenticate before retrieving private data.\nRetrieve only the minimum relevant records.\nValidate request and response schemas.\n\nCapabilities:\n- Weekly summary.\n- Plan-versus-actual analysis.\n- Knowledge retrieval.\n- Decision comparison.\n- Reflection questions.\n- Draft weekly plans.\n\nSeparate verified observations, interpretations, unknowns and suggested actions.\nDo not invent evidence or modify important records without explicit confirmation.\nTest missing data, unauthorized access and API failures.",
+c:["Không tìm thấy key trong code frontend hay bundle.","Người chưa đăng nhập không gọi được Copilot.","AI báo rõ khi thiếu dữ liệu và không tự sửa bản ghi quan trọng."]},
+{t:"Kiểm toán chất lượng & triển khai",w:"Tuần 4",g:"Kiểm tra toàn bộ trước khi dùng thật.",
+s:["Chạy Prompt 7; với mỗi phát hiện yêu cầu: mức độ, cách tái hiện, nguyên nhân gốc, cách sửa, test hồi quy.","Sửa hết lỗi nghiêm trọng, đặc biệt Security Rules và truy cập AI.","Thêm chức năng export dữ liệu và thử khôi phục từ file export.","Build production: <code>npm run build</code>, rồi triển khai (frontend tĩnh + Firebase có thể dùng <code>firebase deploy</code>; cần server runtime thì chọn nền tảng tương thích).","Viết README hướng dẫn chạy và phương án rollback bằng Git tag."],
+p:"Audit the existing Life OS before release.\n\nTest:\n- Authentication.\n- CRUD and persistence.\n- Data relationships.\n- Firestore Security Rules.\n- Unauthorized access.\n- Empty, loading and failure states.\n- AI data access and response validation.\n- Export and recovery.\n- Responsive layout.\n- Production build.\n\nReport severity, reproduction steps, root cause, fix and regression test for each finding.\nDo not claim production readiness while critical issues remain.",
+c:["Không còn lỗi mức critical.","Export và khôi phục đã thử thật.","Bản production chạy được và có điểm rollback."]}
+];
+var D=["Đăng nhập được và dữ liệu lưu vào Firebase.","Tạo và chỉnh sửa được Principles, Identity, Strategy.","Tạo Goals và Projects, liên kết bằng ID.","Ghi nhận Daily Actions và KPI có định nghĩa rõ.","Weekly Review tổng hợp dữ liệu đã ghi nhận.","Decision Log lưu giả định, phương án và kết quả.","AI phân biệt dữ kiện với giả thuyết.","Security Rules được kiểm thử.","Có export dữ liệu và hướng dẫn chạy ứng dụng.","Có Git history và phương án rollback."];
+var S={};try{S=JSON.parse(localStorage.getItem("lifeos-ck")||"{}")}catch(e){}
+function save(){try{localStorage.setItem("lifeos-ck",JSON.stringify(S))}catch(e){}}
+function li(id,h){return '<li><input type="checkbox" id="'+id+'"'+(S[id]?' checked':'')+'><label for="'+id+'">'+h+'</label></li>'}
+var out="",nv="";
+P.forEach(function(p,i){
+var a=p.s.map(function(x,j){return li("s"+i+"_"+j,x)}).join("");
+var b=p.c.map(function(x,j){return li("c"+i+"_"+j,x)}).join("");
+out+='<section class="ph" id="p'+i+'"><header><span class="wk">'+p.w+'</span><h3>Bước '+i+'. '+p.t+'</h3><p class="g">'+p.g+'</p></header><div class="in"><h4>Việc cần làm</h4><ul class="ck">'+a+'</ul>'+
+(p.p?'<details><summary>Prompt '+i+' (bấm để mở và sao chép)</summary><div class="pw"><button class="cp" data-i="'+i+'" type="button">Sao chép</button><pre id="pr'+i+'"></pre></div></details>':'')+
+'<h4>Đạt khi</h4><ul class="ck">'+b+'</ul>'+(p.n?'<div class="wn">'+p.n+'</div>':'')+'</div></section>';
+nv+='<a href="#p'+i+'" id="n'+i+'"><span>'+i+'. '+p.t+'</span><small id="nc'+i+'"></small></a>';
+});
+document.getElementById("ph").innerHTML=out;
+document.getElementById("nv").innerHTML=nv+'<a href="#dod" id="nd"><span>Definition of Done</span><small id="ndc"></small></a>';
+document.getElementById("dod").innerHTML=D.map(function(x,j){return li("d"+j,x)}).join("");
+P.forEach(function(p,i){if(p.p)document.getElementById("pr"+i).textContent=p.p});
+function upd(){
+var tot=0,dn=0;
+function cnt(prefix,n,nid){var d=0;for(var k=0;k<n;k++){if(S[prefix+k])d++}return d}
+P.forEach(function(p,i){
+var n=p.s.length+p.c.length,d=0;
+p.s.forEach(function(_,j){if(S["s"+i+"_"+j])d++});p.c.forEach(function(_,j){if(S["c"+i+"_"+j])d++});
+tot+=n;dn+=d;document.getElementById("nc"+i).textContent=d+"/"+n;
+document.getElementById("n"+i).className=d===n?"done":"";});
+var dd=cnt("d",D.length);tot+=D.length;dn+=dd;
+document.getElementById("ndc").textContent=dd+"/"+D.length;
+document.getElementById("nd").className=dd===D.length?"done":"";
+document.getElementById("pb").style.width=(tot?dn/tot*100:0)+"%";
+document.getElementById("pt").textContent=dn+" / "+tot+" mục đã xong";
+}
+document.addEventListener("change",function(e){if(e.target.type==="checkbox"){S[e.target.id]=e.target.checked;save();upd()}});
+document.addEventListener("click",function(e){var b=e.target.closest(".cp");if(!b)return;
+var t=P[b.dataset.i].p;
+function ok(){b.textContent="Đã chép";setTimeout(function(){b.textContent="Sao chép"},1500)}
+function fb(){var r=document.createRange();r.selectNodeContents(document.getElementById("pr"+b.dataset.i));var s=getSelection();s.removeAllRanges();s.addRange(r);try{document.execCommand("copy");ok()}catch(x){b.textContent="Chọn và chép tay"}}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok,fb)}else{fb()}
+});
+upd();
+</script>
+</body>
+</html>

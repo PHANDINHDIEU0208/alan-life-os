@@ -1,0 +1,206 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile data stored under root collection",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Authenticated user UID" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "displayName": { "type": "string", "description": "Display name of user" },
+        "photoURL": { "type": "string", "description": "Profile avatar URL" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Record creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last update timestamp" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Goal": {
+      "title": "Goal",
+      "description": "Strategic life and career goals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Goal unique identifier" },
+        "userId": { "type": "string", "description": "UID of owner" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200, "description": "Goal title" },
+        "description": { "type": "string", "maxLength": 1000, "description": "Goal description" },
+        "dimensionId": { "type": "string", "description": "Associated life dimension key" },
+        "targetDate": { "type": "string", "description": "Target completion date (YYYY-MM-DD)" },
+        "status": { "type": "string", "enum": ["not_started", "active", "completed", "paused"] },
+        "progressPercent": { "type": "number", "description": "Progress percentage 0-100" },
+        "strategicThemeId": { "type": "string", "description": "Linked strategic theme ID" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Update timestamp" }
+      },
+      "required": ["id", "userId", "title", "status", "progressPercent"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Operational projects linked to strategic bets and goals",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Project unique identifier" },
+        "userId": { "type": "string", "description": "Owner UID" },
+        "goalId": { "type": "string", "description": "Associated Goal ID" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "status": { "type": "string", "enum": ["planning", "in_progress", "blocked", "completed"] },
+        "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+        "strategicBet": { "type": "string", "enum": ["alpha", "cash_cow", "rnd", "kill"] },
+        "dueDate": { "type": "string" },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "status", "strategicBet"]
+    },
+    "KPI": {
+      "title": "KPI",
+      "description": "Key Performance Indicator with explicit formula and direction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "definition": { "type": "string" },
+        "formula": { "type": "string" },
+        "unit": { "type": "string" },
+        "frequency": { "type": "string", "enum": ["daily", "weekly", "monthly", "quarterly"] },
+        "direction": { "type": "string", "enum": ["increase", "decrease", "maintain", "qualitative"] },
+        "targetValue": { "type": "number" },
+        "currentValue": { "type": "number" },
+        "hasMeasurement": { "type": "boolean" },
+        "linkedGoalId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "unit", "frequency", "direction", "hasMeasurement"]
+    },
+    "Principle": {
+      "title": "Principle",
+      "description": "Core invariant principles governing life decisions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "isCore": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "description"]
+    },
+    "Identity": {
+      "title": "Identity",
+      "description": "Identity architecture statements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "statement": { "type": "string" },
+        "type": { "type": "string", "enum": ["aspiring", "anchor", "anti_identity"] },
+        "dimensionKey": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "statement", "type"]
+    },
+    "DailyLog": {
+      "title": "DailyLog",
+      "description": "Daily non-negotiable action items and execution logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "date": { "type": "string" },
+        "text": { "type": "string" },
+        "isPriority": { "type": "boolean" },
+        "completed": { "type": "boolean" },
+        "timeSpentMinutes": { "type": "number" },
+        "energyLevel": { "type": "string", "enum": ["high", "medium", "low"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "date", "text", "completed"]
+    },
+    "WeeklyReview": {
+      "title": "WeeklyReview",
+      "description": "Weekly reflection answering the standardized 8 questions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "weekNumber": { "type": "number" },
+        "year": { "type": "number" },
+        "q1_mostImportant": { "type": "string" },
+        "q2_intendedOutcomes": { "type": "string" },
+        "q3_actualResults": { "type": "string" },
+        "q4_valueCreated": { "type": "string" },
+        "q5_incompleteAndCauses": { "type": "string" },
+        "q6_changedAssumptions": { "type": "string" },
+        "q7_pivotAction": { "type": "string", "enum": ["continue", "stop", "change"] },
+        "q7_pivotNotes": { "type": "string" },
+        "q8_nextWeekPriorities": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "weekNumber", "year", "q1_mostImportant"]
+    },
+    "Decision": {
+      "title": "Decision",
+      "description": "Decision log with uncertainty rating and review date",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "question": { "type": "string" },
+        "criteria": { "type": "string" },
+        "assumptions": { "type": "string" },
+        "uncertaintyLevel": { "type": "string", "enum": ["low", "medium", "high"] },
+        "chosenOption": { "type": "string" },
+        "rationale": { "type": "string" },
+        "reviewDate": { "type": "string" },
+        "actualOutcome": { "type": "string" },
+        "lessonsLearned": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending_review", "reviewed", "abandoned"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "question", "uncertaintyLevel", "chosenOption", "reviewDate", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile data root document"
+    },
+    "/users/{userId}/goals/{goalId}": {
+      "schema": "Goal",
+      "description": "Private goals owned by user"
+    },
+    "/users/{userId}/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Private projects with Strategic Bets"
+    },
+    "/users/{userId}/kpis/{kpiId}": {
+      "schema": "KPI",
+      "description": "Private KPIs and metrics"
+    },
+    "/users/{userId}/principles/{principleId}": {
+      "schema": "Principle",
+      "description": "Foundational personal principles"
+    },
+    "/users/{userId}/identities/{identityId}": {
+      "schema": "Identity",
+      "description": "Identity architecture statements"
+    },
+    "/users/{userId}/daily_logs/{logId}": {
+      "schema": "DailyLog",
+      "description": "Daily action logs and priorities"
+    },
+    "/users/{userId}/weekly_reviews/{reviewId}": {
+      "schema": "WeeklyReview",
+      "description": "Weekly reviews with 8 reflection questions"
+    },
+    "/users/{userId}/decisions/{decisionId}": {
+      "schema": "Decision",
+      "description": "High-stakes decision journal"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Alan's Life OS",
+  "description": "Personal life operating system for Business Performance & Analytics: connecting identity, strategy, strategic bets, KPIs, daily actions, and reflection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

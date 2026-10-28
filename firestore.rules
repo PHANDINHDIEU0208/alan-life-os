@@ -1,0 +1,143 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net: Default-deny all unmapped paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Goal entity validator
+    function isValidGoal(data, userId) {
+      return data.userId == userId &&
+             data.userId == request.auth.uid &&
+             data.title is string &&
+             data.title.size() > 0 &&
+             data.title.size() <= 200 &&
+             data.progressPercent is number &&
+             data.progressPercent >= 0 &&
+             data.progressPercent <= 100 &&
+             data.status in ['not_started', 'active', 'completed', 'paused'];
+    }
+
+    // Project entity validator
+    function isValidProject(data, userId) {
+      return data.userId == userId &&
+             data.userId == request.auth.uid &&
+             data.title is string &&
+             data.title.size() > 0 &&
+             data.title.size() <= 200 &&
+             data.status in ['planning', 'in_progress', 'blocked', 'completed'] &&
+             data.strategicBet in ['alpha', 'cash_cow', 'rnd', 'kill'];
+    }
+
+    // KPI entity validator
+    function isValidKPI(data, userId) {
+      return data.userId == userId &&
+             data.userId == request.auth.uid &&
+             data.title is string &&
+             data.title.size() > 0 &&
+             data.title.size() <= 200 &&
+             data.hasMeasurement is bool &&
+             data.frequency in ['daily', 'weekly', 'monthly', 'quarterly'] &&
+             data.direction in ['increase', 'decrease', 'maintain', 'qualitative'];
+    }
+
+    // Root user document
+    match /users/{userId} {
+      allow get, list: if isOwner(userId);
+      allow create, update: if isOwner(userId) && incoming().uid == userId;
+      allow delete: if isOwner(userId);
+
+      // Goals subcollection (Vertical Slice)
+      match /goals/{goalId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(goalId) && isValidGoal(incoming(), userId);
+        allow update: if isOwner(userId) && 
+                        isValidId(goalId) && 
+                        isValidGoal(incoming(), userId) &&
+                        incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(goalId);
+      }
+
+      // Projects subcollection
+      match /projects/{projectId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(projectId) && isValidProject(incoming(), userId);
+        allow update: if isOwner(userId) && 
+                        isValidId(projectId) && 
+                        isValidProject(incoming(), userId) &&
+                        incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(projectId);
+      }
+
+      // KPIs subcollection
+      match /kpis/{kpiId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && isValidId(kpiId) && isValidKPI(incoming(), userId);
+        allow update: if isOwner(userId) && 
+                        isValidId(kpiId) && 
+                        isValidKPI(incoming(), userId) &&
+                        incoming().userId == existing().userId;
+        allow delete: if isOwner(userId) && isValidId(kpiId);
+      }
+
+      // Principles subcollection
+      match /principles/{principleId} {
+        allow read, write: if isOwner(userId) && isValidId(principleId);
+      }
+
+      // Identity Architecture subcollection
+      match /identities/{identityId} {
+        allow read, write: if isOwner(userId) && isValidId(identityId);
+      }
+
+      // Daily Logs subcollection
+      match /daily_logs/{logId} {
+        allow read, write: if isOwner(userId) && isValidId(logId);
+      }
+
+      // Habits subcollection
+      match /habits/{habitId} {
+        allow read, write: if isOwner(userId) && isValidId(habitId);
+      }
+
+      // Weekly Reviews subcollection
+      match /weekly_reviews/{reviewId} {
+        allow read, write: if isOwner(userId) && isValidId(reviewId);
+      }
+
+      // Decision Log subcollection
+      match /decisions/{decisionId} {
+        allow read, write: if isOwner(userId) && isValidId(decisionId);
+      }
+
+      // Reflections subcollection
+      match /reflections/{reflectionId} {
+        allow read, write: if isOwner(userId) && isValidId(reflectionId);
+      }
+    }
+  }
+}
